@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunarmand - Milliy Mahsulotlar Marketpleysi (MVP)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-amber-50/30 font-sans text-gray-800">
+
+    <!-- Header / Navbar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="switchTab('home')">
+                <span class="bg-amber-600 text-white p-2 rounded-xl font-bold text-xl shadow-md"><i class="fa-solid fa-store"></i></span>
+                <span class="text-2xl font-black tracking-wide text-amber-900">Hunarmand<span class="text-amber-600">.uz</span></span>
+            </div>
+            
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex space-x-8 font-medium text-gray-600">
+                <button onclick="switchTab('home')" class="hover:text-amber-600 transition">Bosh sahifa</button>
+                <button onclick="switchTab('catalog')" class="hover:text-amber-600 transition">Katalog</button>
+                <button onclick="switchTab('seller')" class="hover:text-amber-600 transition flex items-center gap-1"><i class="fa-solid fa-user-plus text-amber-600"></i> Sotuvchi bo'lish</button>
+            </nav>
+
+            <!-- Actions (Cart & Mobile menu triggers) -->
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleCart()" class="relative bg-amber-50 hover:bg-amber-100 text-amber-800 p-2.5 rounded-full transition">
+                    <i class="fa-solid fa-cart-shopping text-lg"></i>
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-amber-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold">0</span>
+                </button>
+                <button onclick="switchTab('seller')" class="hidden sm:block bg-amber-600 text-white px-4 py-2 rounded-xl font-semibold shadow-sm hover:bg-amber-700 transition">Mahsulot qo'shish</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+
+        <!-- TAB 1: BOSH SAHIFA / CATALOG VIEW -->
+        <section id="homeTab" class="space-y-12">
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-amber-800 to-amber-600 rounded-3xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between">
+                <div class="relative z-10 max-w-xl mb-6 md:mb-0">
+                    <span class="bg-amber-500/30 text-amber-200 text-xs px-3 py-1.5 rounded-full uppercase tracking-wider font-semibold">CultureTech Marketplace</span>
+                    <h1 class="text-3xl md:text-5xl font-extrabold mt-3 mb-4 leading-tight">O'zbekiston hunarmandlari durdonalari bir joyda</h1>
+                    <p class="text-amber-100 text-sm md:text-base mb-6">Qo'l mehnati asosida yaratilgan milliy kiyimlar, kulolchilik, zargarlik buyumlari va esdalik sovg'alarini to'g'ridan-to'g'ri ustalardan xarid qiling.</p>
+                    <button onclick="switchTab('catalog')" class="bg-white text-amber-900 font-bold px-6 py-3 rounded-xl shadow-lg hover:bg-amber-50 transition">Katalogga o'tish</button>
+                </div>
+                <div class="relative z-10 text-9xl opacity-95">
+                    🏺🪡🪵
+                </div>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-amber-100 flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="flex items-center w-full md:w-1/2 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200 focus-within:border-amber-600">
+                    <i class="fa-solid fa-search text-gray-400 mr-3"></i>
+                    <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Mahsulot yoki usta nomini qidiring..." class="w-full bg-transparent focus:outline-none text-sm">
+                </div>
+                <div class="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+                    <button onclick="filterCategory('Barchasi')" class="cat-btn bg-amber-600 text-white px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition">Barchasi</button>
+                    <button onclick="filterCategory('Kulolchilik')" class="cat-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap hover:bg-amber-100 transition">Kulolchilik</button>
+                    <button onclick="filterCategory('Zargarlik')" class="cat-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap hover:bg-amber-100 transition">Zargarlik</button>
+                    <button onclick="filterCategory('To\'qimachilik')" class="cat-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap hover:bg-amber-100 transition">To'qimachilik</button>
+                    <button onclick="filterCategory('Yog\'och o\'ymakorligi')" class="cat-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap hover:bg-amber-100 transition">Yog'och</button>
+                    <button onclick="filterCategory('Misgarlik')" class="cat-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap hover:bg-amber-100 transition">Misgarlik</button>
+                    <button onclick="filterCategory('Gilamchilik')" class="cat-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap hover:bg-amber-100 transition">Gilamchilik</button>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-amber-900">Ommabop mahsulotlar</h2>
+                    <span id="productCount" class="text-sm text-gray-500 font-medium">Jami: 0 ta mahsulot</span>
+                </div>
+                <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Dinamik ravishda JavaScript orqali to'ldiriladi -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: SOTUVCHI VA MAHSULOT QO'SHISH -->
+        <section id="sellerTab" class="hidden max-w-2xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-amber-100">
+            <div class="flex items-center space-x-3 mb-6">
+                <span class="bg-amber-100 text-amber-800 p-3 rounded-2xl text-xl"><i class="fa-solid fa-user-tie"></i></span>
+                <div>
+                    <h2 class="text-2xl font-bold text-amber-900">Sotuvchi (Usta) Kabineti</h2>
+                    <p class="text-sm text-gray-500">O'z mahsulotlaringizni platformaga joylashtiring</p>
+                </div>
+            </div>
+
+            <form id="addProductForm" onsubmit="handleProductSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Usta (Sotuvchi) Ismi</label>
+                    <input type="text" id="sellerName" required placeholder="Masalan: Usta Alisher" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-amber-600 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mahsulot Nomi</label>
+                    <input type="text" id="productName" required placeholder="Masalan: Qo'lda ishlangan Rishton lagani" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-amber-600 text-sm">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategoriya</label>
+                        <select id="productCategory" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-amber-600 text-sm bg-white">
+                            <option value="Kulolchilik">Kulolchilik</option>
+                            <option value="Zargarlik">Zargarlik</option>
+                            <option value="To'qimachilik">To'qimachilik</option>
+                            <option value="Yog'och o'ymakorligi">Yog'och o'ymakorligi</option>
+                            <option value="Misgarlik">Misgarlik</option>
+                            <option value="Gilamchilik">Gilamchilik</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Narxi (so'm)</label>
+                        <input type="number" id="productPrice" required placeholder="150000" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-amber-600 text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mahsulot Rasmi (Emoji yoki belgi)</label>
+                    <input type="text" id="productImage" required placeholder="Masalan: 🏺 yoki 🪡" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-amber-600 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Qisqacha Tavsif</label>
+                    <textarea id="productDesc" rows="3" required placeholder="Mahsulot haqida ma'lumot..." class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-amber-600 text-sm"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-amber-600 text-white font-bold py-3 rounded-xl shadow-md hover:bg-amber-700 transition">Mahsulotni qo'shish</button>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- SLIDE-OVER CART DRAWER -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div class="absolute inset-0 bg-black/50 transition-opacity" onclick="toggleCart()"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                <!-- Cart Header -->
+                <div class="p-6 border-b border-gray-100 flex items-center justify-between bg-amber-50/50">
+                    <h3 class="font-bold text-lg text-amber-900 flex items-center gap-2"><i class="fa-solid fa-cart-shopping text-amber-600"></i> Savatcha</h3>
+                    <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+                </div>
+                <!-- Cart Items List -->
+                <div id="cartItemsList" class="flex-1 overflow-y-auto p-6 space-y-4">
+                    <!-- Dinamik to'ldiriladi -->
+                </div>
+                <!-- Cart Footer & Checkout -->
+                <div class="p-6 border-t border-gray-100 bg-gray-50 space-y-4">
+                    <div class="flex justify-between text-base font-bold text-gray-900">
+                        <span>Jami summa:</span>
+                        <span id="cartTotalPrice" class="text-amber-600">0 so'm</span>
+                    </div>
+                    <button onclick="checkout()" class="w-full bg-amber-600 text-white font-bold py-3 rounded-xl shadow-md hover:bg-amber-700 transition">Buyurtma berish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-amber-100 mt-20 py-8 text-center text-gray-500 text-sm">
+        <p>&copy; 2026 Hunarmand.uz - CultureTech Marketplace MVP. Barcha huquqlar himoyalangan.</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Kengaytirilgan mahsulotlar bazasi (Mock Data)
+        let products = [
+            { id: 1, name: "Rishton Kulolchilik Lagani", category: "Kulolchilik", price: 180000, seller: "Usta Rustam", image: "🏺", desc: "Qo'lda chizilgan milliy naqshli sirli lagan." },
+            { id: 2, name: "Buxoro Zardo'zi Do'ppi", category: "To'qimachilik", price: 250000, seller: "Zarnigor", image: "👑", desc: "Tilla iplar bilan ishlangan qadimiy uslubdagi do'ppi." },
+            { id: 3, name: "Qo'lda yasalgan Yog'och Sandiqcha", category: "Yog'och o'ymakorligi", price: 420000, seller: "Usta Turg'un", image: "🪵", desc: "Yong'oq daraxtidan o'ymakorlik usulida yasalgan quti." },
+            { id: 4, name: "Kumush Milliy Taqinchoq", category: "Zargarlik", price: 750000, seller: "Zargar Akbar", image: "💍", desc: "925-probali kumushdan yasalgan ayollar uzugi." },
+            { id: 5, name: "Samarqand Non Taxtasi (O'ymakor)", category: "Yog'och o'ymakorligi", price: 120000, seller: "Usta Bahodir", image: "🍽️", desc: "Maxsus archa yog'ochidan yasalgan milliy naqshli taxta." },
+            { id: 6, name: "Qashqadaryo Qo'lbola Gilami", category: "Gilamchilik", price: 1950000, seller: "Mavluda momo", image: "🧶", desc: "Tabiiy jun iplardan to'qilgan qadimiy uslubdagi gilam." },
+            { id: 7, name: "Misgar Choynak va Piyola Dasturxon Jamlanmasi", category: "Misgarlik", price: 540000, seller: "Usta Hakim", image: "🫖", desc: "Qo'lda bolg'alangab sof misdan yasalgan idishlar to'plami." },
+            { id: 8, name: "Marg'ilon Atlas Matosi (1 metr)", category: "To'qimachilik", price: 110000, seller: "Madinaxon", image: "👗", desc: "Sof tabiiy ipakdan to'qilgan milliy rangdor mato." },
+            { id: 9, name: "Xiva Ganch O'ymakorligi Suveniri", category: "Yog'och o'ymakorligi", price: 310000, seller: "Usta Karimboy", image: "🏛️", desc: "Xorazm me'morchiligi naqshlari tushirilgan qo'l ishi." },
+            { id: 10, name: "Qo'qon Pichoq Ustasi Pichog'i", category: "Misgarlik", price: 280000, seller: "Usta Omon", image: "🗡️", desc: "Maxsus po'latdan yasalgan, suyak dastali milliy pichoq." },
+            { id: 11, name: "Toshkent Zargarlik Bilaguzugi", category: "Zargarlik", price: 920000, seller: "Zargar Jamshid", image: "💎", desc: "An'anaviy o'zbek zargarligi uslubida ishlangan bilaguzuk." },
+            { id: 12, name: "Gurlan So'zani Kashtasi", category: "To'qimachilik", price: 1450000, seller: "Gulnora opa", image: "🪡", desc: "Devorga osiladigan yoki to'shaladigan qo'lda tikilgan so'zani." }
+        ];
+
+        let cart = [];
+        let currentCategory = 'Barchasi';
+
+        // Tablarni almashtirish
+        function switchTab(tabName) {
+            const homeTab = document.getElementById('homeTab');
+            const sellerTab = document.getElementById('sellerTab');
+
+            if (tabName === 'home' || tabName === 'catalog') {
+                homeTab.classList.remove('hidden');
+                sellerTab.classList.add('hidden');
+                if(tabName === 'catalog') {
+                    window.scrollTo({ top: 400, behavior: 'smooth' });
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            } else if (tabName === 'seller') {
+                homeTab.classList.add('hidden');
+                sellerTab.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Mahsulotlarni ekranga chiqarish
+        function renderProducts(itemsToRender) {
+            const grid = document.getElementById('productGrid');
+            const countLabel = document.getElementById('productCount');
+            countLabel.innerText = `Jami: ${itemsToRender.length} ta mahsulot`;
+
+            if (itemsToRender.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">Hech qanday mahsulot topilmadi.</div>`;
+                return;
+            }
+
+            grid.innerHTML = itemsToRender.map(p => `
+                <div class="bg-white rounded-2xl shadow-sm border border-amber-100 overflow-hidden flex flex-col justify-between hover:shadow-md transition">
+                    <div class="p-6 text-center bg-amber-50/40 text-6xl py-8">
+                        ${p.image}
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-semibold">${p.category}</span>
+                                <span class="text-xs text-gray-500"><i class="fa-solid fa-user-circle text-amber-600 mr-1"></i>${p.seller}</span>
+                            </div>
+                            <h3 class="font-bold text-base text-gray-800 mb-1">${p.name}</h3>
+                            <p class="text-gray-500 text-xs mb-4 line-clamp-2">${p.desc}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                            <span class="font-black text-amber-900">${p.price.toLocaleString()} so'm</span>
+                            <button onclick="addToCart(${p.id})" class="bg-amber-600 text-white p-2.5 rounded-xl hover:bg-amber-700 transition shadow-sm" title="Savatga qo'shish">
+                                <i class="fa-solid fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Qidiruv funksiyasi
+        function filterProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = products.filter(p => 
+                p.name.toLowerCase().includes(query) || 
+                p.seller.toLowerCase().includes(query) ||
+                p.category.toLowerCase().includes(query)
+            );
+            if (currentCategory !== 'Barchasi') {
+                filtered = filtered.filter(p => p.category === currentCategory);
+            }
+            renderProducts(filtered);
+        }
+
+        // Kategoriya bo'yicha filter
+        function filterCategory(cat) {
+            currentCategory = cat;
+            
+            // Tugmalar rangini o'zgartirish
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.innerText.includes(cat) || (cat === 'Barchasi' && btn.innerText === 'Barchasi')) {
+                    btn.className = "cat-btn bg-amber-600 text-white px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition";
+                } else {
+                    btn.className = "cat-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap hover:bg-amber-100 transition";
+                }
+            });
+
+            let filtered = products;
+            if (cat !== 'Barchasi') {
+                filtered = products.filter(p => p.category === cat);
+            }
+            
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            if (query) {
+                filtered = filtered.filter(p => p.name.toLowerCase().includes(query) || p.seller.toLowerCase().includes(query));
+            }
+
+            renderProducts(filtered);
+        }
+
+        // Sotuvchi tomonidan yangi mahsulot qo'shish
+        function handleProductSubmit(e) {
+            e.preventDefault();
+            const newProduct = {
+                id: products.length + 1,
+                seller: document.getElementById('sellerName').value,
+                name: document.getElementById('productName').value,
+                category: document.getElementById('productCategory').value,
+                price: Number(document.getElementById('productPrice').value),
+                image: document.getElementById('productImage').value || '🎨',
+                desc: document.getElementById('productDesc').value
+            };
+
+            products.unshift(newProduct);
+            alert("Mahsulot muvaffaqiyatli qo'shildi va katalogga joylandi!");
+            document.getElementById('addProductForm').reset();
+            switchTab('home');
+            renderProducts(products);
+        }
+
+        // Savatni ochish/yopish
+        function toggleCart() {
+            const drawer = document.getElementById('cartDrawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        // Savatga qo'shish
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const cartItem = cart.find(item => item.id === productId);
+
+            if (cartItem) {
+                cartItem.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            updateCartUI();
+            toggleCart(); // Savat ochilib ko'rsatilishi uchun
+        }
+
+        // Savat elementlarini yangilash
+        function updateCartUI() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItemsList = document.getElementById('cartItemsList');
+            const cartTotalPrice = document.getElementById('cartTotalPrice');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            cartCount.innerText = totalItems;
+
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = `<div class="text-center text-gray-400 py-12">Savatchangiz bo'sh</div>`;
+                cartTotalPrice.innerText = "0 so'm";
+                return;
+            }
+
+            let totalSum = 0;
+            cartItemsList.innerHTML = cart.map(item => {
+                totalSum += item.price * item.qty;
+                return `
+                    <div class="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <div class="text-3xl mr-3">${item.image}</div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-sm text-gray-800">${item.name}</h4>
+                            <span class="text-xs text-gray-500">${item.price.toLocaleString()} so'm x ${item.qty}</span>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-red-400 hover:text-red-600 p-2"><i class="fa-solid fa-trash-can text-sm"></i></button>
+                    </div>
+                `;
+            }).join('');
+
+            cartTotalPrice.innerText = totalSum.toLocaleString() + " so'm";
+        }
+
+        // Savatdan o'chirish
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartUI();
+        }
+
+        // Buyurtma berish (Checkout)
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Savatchangiz bo'sh!");
+                return;
+            }
+            alert("Buyurtmangiz muvaffaqiyatli qabul qilindi! Tez orada usta siz bilan bog'lanadi.");
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        }
+
+        // Sahifa yuklanganda mahsulotlarni chiqarish
+        renderProducts(products);
+    </script>
+</body>
+</html>
